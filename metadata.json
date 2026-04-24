@@ -1,0 +1,6 @@
+{
+  "name": "Queue Finder",
+  "description": "Real-time queue tracking for sports venues helping fans find the fastest food, washrooms, and gates.",
+  "requestFramePermissions": [],
+  "majorCapabilities": []
+}
