@@ -1,46 +1,77 @@
-# 🏟️ Q-Assistant: Stadium Ground Control
+# Stadium Command
 
-A high-fidelity, real-time command-and-control platform designed for stadium operations and fan navigation. This application bridges the gap between stadium staff and attendees, providing a live telemetry-driven experience to minimize congestion and maximize safety.
+A live, real-time stadium operations system designed for crowd monitoring, incident reporting, triage, and field response.
 
-## 🚀 The Mission
-Major sporting events face "The Surge" — where thousands of fans collide at gates, concessions, and exits simultaneously. **Q-Assistant** provides a live "Digital Twin" of the stadium, allowing staff to manage flow and fans to find the path of least resistance.
+## The Problem
+Running a massive stadium event involves thousands of moving pieces. When a fan spills a drink, a fight breaks out, or a queue gets too long, communicating exactly *what* is happening and *where* to the right department usually relies on slow radios or confusing chains of command. Uncoordinated responses cause delays, safety risks, and poor fan experiences.
 
-## ✨ Core Capabilities
-- **Digital Twin Telemetry:** An interactive stadium heatmap that visualizes crowd density across North, South, East, West, and Pavilion sectors.
-- **AI Strategy Advisor:** Powered by **Gemini 2.0 Flash**, the app analyzes live node data to generate tactical advice (e.g., "Shift to Gate 4—North entry is currently at 90% capacity").
-- **Ground Control Dashboard:** A command center for staff to register "Strategy Nodes" (concessions, gates, washrooms) and update live intel.
-- **Visual Intel (POD):** Staff can capture and upload live photos of crowd levels for visual verification of telemetry data.
-- **Global Deployment:** Full native support for English and Hindi (हिन्दी) to serve diverse fanbases.
+## Our Solution
+Stadium Command is a unified platform that connects everyone in the venue. It allows:
+*   **Attendees** to report issues instantly.
+*   **Volunteers** to update crowd conditions and telemetry from the field.
+*   **Command Center** operators to monitor all incidents globally.
+*   **Security, Housekeeping, and Police** to receive and act on cases assigned specifically to them in real-time.
 
-### 🛡️ For Operations (Staff View)
-- **Node Management:** Register, update, or purge monitoring assets across the venue.
-- **Live Ops Intel:** Add detailed telemetry observations (notes) to specific nodes.
-- **Density Controls:** Real-time adjustment of person counts and status levels (Clear, Buffer, Heavy).
-- **History Tracking:** Visual "Time-stack" showing exactly when a node was last updated.
+## Main Features
+*   **Live Incident Routing:** Instantly route issues to the correct department.
+*   **AI Triage:** Automatically summarize long reports and assess true severity.
+*   **Photo Evidence:** Fans and staff can "show, not just tell" what the problem is.
+*   **Multi-Role Ops:** Specialized dashboards built exactly for the needs of each role.
 
-### 🎫 For Attendees (Fan View)
-- **Live Venue Map:** A high-contrast visual guide to stadium congestion.
-- **Smart Shortcuts:** Instant routing to "Sustenance" (Food), "Hygiene" (Washrooms), or "Response" (Help) nodes.
-- **ADA & Safety Priority:** Dedicated visibility for accessible routes and emergency medical nodes.
+## Role-Based Modules
+*   **Attendee:** Frictionless reporting with location tagging, image uploads, and urgency controls.
+*   **Volunteer:** Practical tools for field staff to update zone statuses dynamically and estimate headcounts.
+*   **Command Center:** Real-time telemetry map summarizing zone hot-spots, intelligent KPIs, and a live activity timeline.
+*   **Security:** A dark-mode tactical interface for guards with lifecycle tracking (En-Route, On-Scene) and direct Police escalation.
+*   **Housekeeping:** An optimized task board for cleaners to accept tasks and clear the queue easily.
+*   **Police:** An isolated, high-contrast critical interface handling only extreme, escalated threats.
 
-## 🤖 AI Engine
-The application leverages the **Google GenAI SDK** to turn raw numbers into human-centric advice. By feeding the current state of all nodes into Gemini, it identifies patterns that a human might miss — like a ripple effect from a crowded gate to a nearby food plaza.
+## AI Usage
+Stadium Command uses **Gemini 2.5 Flash** as an instant triage assistant. When an attendee sends an unstructured report and a photo, Gemini analyzes it to:
+*   Gauge the true severity (e.g., distinguishing a "spilled soda" from a "medical emergency").
+*   Extract a concise, actionable headline.
+*   Help the Command Center act faster by drastically reducing cognitive load during high-stress events.
 
-## 🛠 Tech Stack
-- **Interface:** React 18 + Vite (Mobile-First Architecture)
-- **Motion:** Framer Motion for tactical HUD animations and staggered transitions.
-- **Styling:** Tailwind CSS (Modern Slate & Brand Orange palette).
-- **Intelligence:** Google Gemini API (Flash 2.0).
-- **Backend:** Node.js + Express (Real-time JSON synchronization).
+## Tech Stack
+*   **Frontend:** React 18, Vite, Tailwind CSS, Lucide Icons
+*   **Backend:** Node.js, Express (with an rapid in-memory database tailored for seamless demo experiences)
+*   **AI:** Google GenAI SDK (`@google/genai`)
 
-## 🏃 Quick Start
+## Local Setup
+1. Clone the repository:
+   ```bash
+   git clone <repository_url>
+   cd stadium-command
+   ```
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
+3. Add your environment variables (see below).
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-1. **Install dependencies:** `npm install`
-2. **Environment:** Add `GEMINI_API_KEY` to your secrets.
-3. **Launch:** `npm run dev`
-4. **Access:** Open `http://localhost:3000`.
+## Environment Variables
+Create a file named `.env` in the root folder and add your Gemini API Key:
+```env
+VITE_GEMINI_API_KEY=your_api_key_here
+```
+*(No other variables are required for the core app to run in the local demo mode).*
 
-## 🧪 Operational Testing
-1. **Intelligence Check:** Switch to Hindi and witness the AI advisor translate tactical advice in real-time.
-2. **Command Override:** Enter **Admin Access** (PIN: `1234`) and change the status of a gate to "High".
-3. **Verification:** Observe the global stadium map switch that node to a red "Critical" alert state instantly.
+## How Judges Can Test This
+To understand the full value of Stadium Command, we recommend testing the system from different perspectives using multiple browser tabs or windows:
+
+1.  **Open the App & View Roles:** Open the landing page to see the different available modules.
+2.  **Submit a Report (Attendee):** Open the **Attendee UI**. Report a "Security Issue" or "Spill", provide a short description, upload a photo, and click submit. You will receive a Case ID.
+3.  **Update Crowd Telemetry (Volunteer):** Open the **Volunteer Ops** page. Select a zone, update the crowd density and headcount, and submit.
+4.  **Monitor the Network (Command Center):** Open the **Central HQ**. Watch the KPI dashboard update automatically. You will see the new incidents appear with an AI-generated summary and severity rating.
+5.  **Act on the Incident (Security/Housekeeping):** 
+    *   If you reported a spill, open the **Housekeeping** module, accept the job, and mark it Cleaned.
+    *   If you reported a security issue, open the **Security** module. Mark it "En Route", then "On Scene". For testing, choose "10-33: Request LEO" to escalate it to the police.
+6.  **Police Escalation (Police):** Open the **LEO Escalation** module. Notice how the critical security threat has bypassed normal channels and appeared immediately on the Police dashboard with high-priority warnings.
+
+## Demo Credentials / Notes
+*   **Role Switching:** All roles are accessible from the main landing page without requiring a login or PIN. This frictionless setup allows judges to easily jump between views.
+*   **In-Memory Database:** This demo uses a fast in-memory store. Data will reset when the server restarts, making it perfect for rapid testing loops.

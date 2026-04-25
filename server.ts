@@ -14,6 +14,23 @@ interface Location {
   zone: "North" | "South" | "East" | "West" | "Pavilion" | "Concourse";
   count: number;
   imageUrl?: string;
+  notes?: string;
+  updatedAt: number;
+}
+
+interface Incident {
+  id: string;
+  type: "security" | "housekeeping" | "crowd" | "help";
+  severity: "low" | "medium" | "high" | "critical";
+  status: "open" | "assigned" | "en_route" | "on_scene" | "in_progress" | "resolved" | "escalated_to_police";
+  assignedTo?: string;
+  locationId?: string; // Reference to a Location.id
+  customLocation?: string; 
+  description?: string;
+  imageUrl?: string;
+  reporterRole: "attendee" | "volunteer" | "staff";
+  aiSummary?: string;
+  createdAt: number;
   updatedAt: number;
 }
 
@@ -50,11 +67,58 @@ let locations: Location[] = [
   { id: "20", name: "ADA Accessible Route (West)", category: "help", status: "Low", zone: "West", count: 0, updatedAt: Date.now() },
 ];
 
+let incidents: Incident[] = [
+  {
+    id: "INC-9A2K1",
+    type: "housekeeping",
+    severity: "medium",
+    status: "open",
+    locationId: "8",
+    zone: "West",
+    description: "Major spill near the washroom entrance, needs immediate cleanup to prevent slipping.",
+    reporterRole: "volunteer",
+    createdAt: Date.now() - 1000 * 60 * 12,
+    updatedAt: Date.now() - 1000 * 60 * 12,
+  },
+  {
+    id: "INC-8B9V3",
+    type: "security",
+    severity: "high",
+    status: "escalated_to_police",
+    customLocation: "Outside Gate 3",
+    zone: "South",
+    description: "Altercation between two groups of fans. Pushing and shouting.",
+    reporterRole: "attendee",
+    aiSummary: "FIGHT/ALTERCATION at Gate 3. High risk of injury.",
+    isDanger: true,
+    assignedDept: "Police",
+    assignedTo: "UNIT-7-ALPHA",
+    createdAt: Date.now() - 1000 * 60 * 25,
+    updatedAt: Date.now() - 1000 * 60 * 5,
+  },
+  {
+    id: "INC-1C4X9",
+    type: "help",
+    severity: "critical",
+    status: "en_route",
+    customLocation: "Section 104, Row G",
+    zone: "Pavilion",
+    stand: "104",
+    description: "Elderly person fainted, breathing but unresponsive.",
+    reporterRole: "attendee",
+    aiSummary: "MEDICAL EMERGENCY: Fainted person, Section 104.",
+    isDanger: true,
+    assignedDept: "Medical",
+    createdAt: Date.now() - 1000 * 60 * 3,
+    updatedAt: Date.now() - 1000 * 60 * 1,
+  }
+];
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
 
-  app.use(express.json());
+  app.use(express.json({ limit: '50mb' })); // Allow large image payloads
 
   // API Routes
   app.get("/api/locations", (req, res) => {
@@ -62,17 +126,18 @@ async function startServer() {
   });
 
   app.post("/api/locations", (req, res) => {
-    const { id, name, category, status, zone, count, imageUrl } = req.body;
+    const { id, name, category, status, zone, count, imageUrl, notes } = req.body;
     
     const index = locations.findIndex(loc => loc.id === id);
     const newLocation: Location = {
-      id: id || Math.random().toString(36).substr(2, 9),
+      id: id || Math.random().toString(36).substring(2, 9),
       name,
       category,
       status,
       zone: zone || "North",
       count: parseInt(count) || 0,
       imageUrl,
+      notes,
       updatedAt: Date.now(),
     };
 
@@ -83,6 +148,86 @@ async function startServer() {
     }
 
     res.json(newLocation);
+  });
+
+  app.get("/api/logs", (req, res) => {
+    res.json(systemLogs.sort((a, b) => b.timestamp - a.timestamp));
+  });
+
+  app.get("/api/incidents", (req, res) => {
+    res.json(incidents.sort((a, b) => b.createdAt - a.createdAt));
+  });
+
+  function addLog(message: string) {
+    systemLogs.unshift({
+      id: Math.random().toString(36).substring(2, 9),
+      timestamp: Date.now(),
+      message
+    });
+    if (systemLogs.length > 50) systemLogs.pop();
+  }
+
+  app.post("/api/incidents", (req, res) => {
+    const { id, type, severity, status, locationId, customLocation, zone, stand, description, imageUrl, reporterRole, aiSummary, isDanger, assignedTo, assignedDept } = req.body;
+    
+    const index = incidents.findIndex(inc => inc.id === id);
+    
+    if (index !== -1) {
+      // Update
+      const oldStatus = incidents[index].status;
+      incidents[index] = {
+        ...incidents[index],
+        type: type || incidents[index].type,
+        severity: severity || incidents[index].severity,
+        status: status || incidents[index].status,
+        locationId: locationId || incidents[index].locationId,
+        customLocation: customLocation || incidents[index].customLocation,
+        zone: zone || incidents[index].zone,
+        stand: stand || incidents[index].stand,
+        description: description || incidents[index].description,
+        imageUrl: imageUrl !== undefined ? imageUrl : incidents[index].imageUrl,
+        reporterRole: reporterRole || incidents[index].reporterRole,
+        aiSummary: aiSummary || incidents[index].aiSummary,
+        isDanger: isDanger !== undefined ? isDanger : incidents[index].isDanger,
+        assignedTo: assignedTo !== undefined ? assignedTo : incidents[index].assignedTo,
+        assignedDept: assignedDept !== undefined ? assignedDept : incidents[index].assignedDept,
+        updatedAt: Date.now(),
+      };
+      
+      if (status && status !== oldStatus) {
+         addLog(`Incident ${id} status changed to ${status}`);
+      }
+      if (assignedTo && assignedTo !== incidents[index].assignedTo) {
+         addLog(`Incident ${id} assigned to ${assignedTo}`);
+      }
+
+      res.json(incidents[index]);
+    } else {
+      // Create
+      const newId = `INC-${Math.random().toString(36).substring(2, 7).toUpperCase()}`;
+      const newIncident: Incident = {
+        id: newId,
+        type,
+        severity: severity || "medium",
+        status: status || "open",
+        locationId,
+        customLocation,
+        zone,
+        stand,
+        description,
+        imageUrl,
+        reporterRole: reporterRole || "attendee",
+        aiSummary,
+        isDanger: !!isDanger,
+        assignedTo,
+        assignedDept,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      };
+      incidents.push(newIncident);
+      addLog(`New report ${newId} created by ${reporterRole}`);
+      res.json(newIncident);
+    }
   });
 
   // Vite middleware for development
@@ -106,3 +251,4 @@ async function startServer() {
 }
 
 startServer();
+

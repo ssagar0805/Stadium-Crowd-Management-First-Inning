@@ -12,3 +12,23 @@ export interface Location {
 
 export type Category = Location["category"];
 export type Status = Location["status"];
+
+export interface Incident {
+  id: string;
+  type: "security" | "housekeeping" | "crowd" | "help" | "suspicious" | "accessibility";
+  severity: "low" | "medium" | "high" | "critical";
+  status: "open" | "assigned" | "en_route" | "on_scene" | "in_progress" | "resolved" | "escalated_to_police";
+  assignedTo?: string;
+  assignedDept?: string;
+  locationId?: string; // Reference to a Location.id
+  customLocation?: string; 
+  zone?: string;
+  stand?: string;
+  description?: string;
+  imageUrl?: string;
+  reporterRole: "attendee" | "volunteer" | "staff";
+  isDanger?: boolean;
+  aiSummary?: string;
+  createdAt: number;
+  updatedAt: number;
+}
