@@ -6,6 +6,7 @@ export interface Location {
   zone: "North" | "South" | "East" | "West" | "Pavilion" | "Concourse";
   count: number;
   imageUrl?: string;
+  notes?: string;
   updatedAt: number;
 }
 

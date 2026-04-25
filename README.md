@@ -1,68 +1,46 @@
-# 🏟️ Stadium Assistant (Live Queue & Help)
+# 🏟️ Q-Assistant: Stadium Ground Control
 
-A real-time, lightweight mobile assistant designed to help stadium attendees navigate large crowds and find the fastest routes during major events.
+A high-fidelity, real-time command-and-control platform designed for stadium operations and fan navigation. This application bridges the gap between stadium staff and attendees, providing a live telemetry-driven experience to minimize congestion and maximize safety.
 
-## 🚀 The Problem
-Large stadium events are often chaotic. Attendees waste significant time standing in long lines for entry gates, food stalls, and washrooms, often missing key moments of the game. Information about accessible routes or medical help is also hard to find in a rush.
+## 🚀 The Mission
+Major sporting events face "The Surge" — where thousands of fans collide at gates, concessions, and exits simultaneously. **Q-Assistant** provides a live "Digital Twin" of the stadium, allowing staff to manage flow and fans to find the path of least resistance.
 
-## ✨ Main Features
-- **Live Queue Monitoring:** Real-time status updates (Low/Medium/High) for all stadium facilities.
-- **Visual Status Board:** A simple oval stadium heatmap showing traffic levels at a glance.
-- **AI Match Day Pro-Tips:** Smart, 1-sentence recommendations on where to go right now to save time.
-- **Multi-Language Support:** Quickly toggle between **English** and **Hindi**.
-- **Mobile-First Design:** Clean, simple interface for use in crowded environments.
+## ✨ Core Capabilities
+- **Digital Twin Telemetry:** An interactive stadium heatmap that visualizes crowd density across North, South, East, West, and Pavilion sectors.
+- **AI Strategy Advisor:** Powered by **Gemini 2.0 Flash**, the app analyzes live node data to generate tactical advice (e.g., "Shift to Gate 4—North entry is currently at 90% capacity").
+- **Ground Control Dashboard:** A command center for staff to register "Strategy Nodes" (concessions, gates, washrooms) and update live intel.
+- **Visual Intel (POD):** Staff can capture and upload live photos of crowd levels for visual verification of telemetry data.
+- **Global Deployment:** Full native support for English and Hindi (हिन्दी) to serve diverse fanbases.
 
-### For Attendees (Fan Side)
-- **Quick Shortcuts:** One-tap buttons for "Find My Gate", "Food Near Me", or "ADA Routes".
-- **Explore Tab:** Detailed list of all locations with live wait times.
-- **Help & Safety:** Dedicated pins for First Aid, Security, and Senior Assistance.
+### 🛡️ For Operations (Staff View)
+- **Node Management:** Register, update, or purge monitoring assets across the venue.
+- **Live Ops Intel:** Add detailed telemetry observations (notes) to specific nodes.
+- **Density Controls:** Real-time adjustment of person counts and status levels (Clear, Buffer, Heavy).
+- **History Tracking:** Visual "Time-stack" showing exactly when a node was last updated.
 
-### For Stadium Staff (Admin Side)
-- **PIN Protected Access:** Secure staff-only dashboard (Demo PIN: `1234`).
-- **Live Updates:** Quickly update person counts and status tags for specific zones.
-- **Unified Management:** Category-specific views for managing Gates, Food, and Safety points.
+### 🎫 For Attendees (Fan View)
+- **Live Venue Map:** A high-contrast visual guide to stadium congestion.
+- **Smart Shortcuts:** Instant routing to "Sustenance" (Food), "Hygiene" (Washrooms), or "Response" (Help) nodes.
+- **ADA & Safety Priority:** Dedicated visibility for accessible routes and emergency medical nodes.
 
-## 🤖 AI Usage
-The app uses **Gemini 2.0 Flash** to analyze current crowd data across all zones and generate a helpful "Pro-tip" for the user. It identifies the least crowded entry points or food stalls and provides direct advice in the user's chosen language.
+## 🤖 AI Engine
+The application leverages the **Google GenAI SDK** to turn raw numbers into human-centric advice. By feeding the current state of all nodes into Gemini, it identifies patterns that a human might miss — like a ripple effect from a crowded gate to a nearby food plaza.
 
 ## 🛠 Tech Stack
-- **Frontend:** React + Vite
-- **Styling:** Tailwind CSS + Framer Motion (Animations)
-- **Backend:** Node.js + Express (In-memory storage)
-- **Icons:** Lucide React
-- **AI:** Google Gemini API
+- **Interface:** React 18 + Vite (Mobile-First Architecture)
+- **Motion:** Framer Motion for tactical HUD animations and staggered transitions.
+- **Styling:** Tailwind CSS (Modern Slate & Brand Orange palette).
+- **Intelligence:** Google Gemini API (Flash 2.0).
+- **Backend:** Node.js + Express (Real-time JSON synchronization).
 
-## 📦 Local Setup (GitHub)
+## 🏃 Quick Start
 
-1. **Clone the repo:**
-   ```bash
-   git clone <your-repo-url>
-   cd stadium-assistant
-   ```
+1. **Install dependencies:** `npm install`
+2. **Environment:** Add `GEMINI_API_KEY` to your secrets.
+3. **Launch:** `npm run dev`
+4. **Access:** Open `http://localhost:3000`.
 
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Set Environment Variables:**
-   Create a `.env` file in the root and add your Gemini API Key:
-   ```env
-   GEMINI_API_KEY=your_gemini_api_key_here
-   ```
-
-## 🏃 Run Steps (Baby Steps)
-
-1. **Start the development server:**
-   ```bash
-   npm run dev
-   ```
-2. **Open the App:**
-   Go to `http://localhost:3000` in your browser.
-
-## 🧪 How to Test
-1. **Fan View:** Browse the home page, toggle between English/Hindi, and check the "Explore" or "Live Updates" tabs.
-2. **Admin Access:** Click the **"Admin Access"** button in the top right.
-3. **Login:** Enter the demo PIN: `1234`.
-4. **Update Data:** Change the status of a Food Plaza from "High" to "Low".
-5. **Verify:** Switch back to Fan View to see the live update reflected on the heatmap and AI pro-tip.
+## 🧪 Operational Testing
+1. **Intelligence Check:** Switch to Hindi and witness the AI advisor translate tactical advice in real-time.
+2. **Command Override:** Enter **Admin Access** (PIN: `1234`) and change the status of a gate to "High".
+3. **Verification:** Observe the global stadium map switch that node to a red "Critical" alert state instantly.
